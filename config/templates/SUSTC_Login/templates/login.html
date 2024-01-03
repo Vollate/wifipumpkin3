@@ -1,0 +1,428 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Login - Central Authentication Service</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icons/favicon.ico') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-grid.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/material-components-web.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/materialdesignicons.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cas.css') }}" />
+    <script src="{{ url_for('static', filename='js/es5-shim.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/css-vars-ponyfill.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/material-components-web.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cas.js') }}"></script>
+<!--    <script src="static/jsndex.js"></script>-->
+</head>
+
+<body>
+    <div>
+        <header id="app-bar" class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z4">
+            <nav class="mdc-top-app-bar__row">
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                    <button class="mdc-icon-button mdc-top-app-bar__navigation-icon">
+                        <span class="mdi mdi-menu"></span>
+                        <span class="sr-only">menu</span>
+                    </button>
+                    <div class="cas-brand "
+                        style="width: 200px; background:url('../static/cas/images/cas-logo.png'); background-repeat: no-repeat;background-size: contain;margin-left: 20px; ">
+                    </div>
+                </section>
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
+                    <!--                <img class="cas-brand mx-auto" src="/cas/images/cas-logo.png"/>-->
+                </section>
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" style="width: 160px;">
+                    <!--                <div style="float:right;color:white;">-->
+                    <!--                    <form id="zh" style="display:inline;" method="post"><input type="hidden" name="locale" value="zh_CN"><button class="mdc-button mdc-button__label" style="min-width:6px;color:white;padding: 0;margin: 0;border: 0;" type="submit">中文</button></form>-->
+                    <!--                    |-->
+                    <!--                    <form id="en" style="display:inline;" method="post"><input type="hidden" name="locale" value="en"><button class="mdc-button mdc-button__label" style="min-width:6px;color:white;padding: 0;margin: 0;border: 0;" type="submit">En</button></form>-->
+                    <!--                </div>-->
+                    <button id="cas-notifications-menu"
+                        class="mdc-icon-button mdc-top-app-bar__action-item cas-notification-toggle"
+                        aria-label="Bookmark this page">
+                        <span class="mdi mdi-bell-alert"></span>
+                        <span class="sr-only">notifications</span>
+                        <i id="notifications-count" class="notifications-count count">0</i>
+                    </button>
+                </section>
+            </nav>
+        </header>
+        <aside id="app-drawer" class="mdc-drawer mdc-drawer--dismissible mdc-drawer--modal">
+            <!--        <div class="mdc-drawer__header">-->
+            <!--            <h3 class="mdc-drawer__title">CAS</h3>-->
+            <!--            <h6 class="mdc-drawer__subtitle">Central Authentication Service</h6>-->
+            <!--        </div>-->
+            <div class="mdc-drawer__content">
+                <nav class="mdc-list">
+                    <a href="https://cas.sustech.edu.cn/cas/user/info" class="mdc-list-item banner-primary">
+                        <i class="mdi mdi-cog"></i>
+                        &nbsp;<span class="mdc-list-item__text">个人信息</span>
+                    </a>
+                    <!--                <a th:href="@{/actuator}" class="mdc-list-item">-->
+                    <!--                    <i class="mdi mdi-cogs"></i>&nbsp;-->
+                    <!--                    <span class="mdc-list-item__text">Actuator Endpoints</span>-->
+                    <!--                </a>-->
+                    <hr class="mdc-list-divider" />
+                    <div class="text-center">
+                        <form id="zh" class="d-inline" method="post">
+                            <input type="hidden" name="locale" value="zh_CN">
+                            <button class="mdc-button mdc-button__label" type="submit" disabled>中文</button>
+                        </form>
+                        <span>|</span>
+                        <form id="en" class="d-inline" method="post">
+                            <input type="hidden" name="locale" value="en">
+                            <button class="mdc-button mdc-button__label" type="submit" disabled>En</button>
+                        </form>
+                    </div>
+                </nav>
+            </div>
+        </aside>
+        <script>
+            var countMessages = 0;
+        </script>
+        <div class="mdc-dialog cas-notification-dialog" id="cas-notification-dialog" role="alertdialog"
+            aria-modal="true" aria-labelledby="notif-dialog-title" aria-describedby="notif-dialog-content">
+            <div class="mdc-dialog__container">
+                <div class="mdc-dialog__surface">
+                    <div class="mdc-dialog__content" id="notif-dialog-content" style="padding-bottom: 0;">
+                        <div class="cas-notification-message mdc-typography--body1">
+                            <h6 style="margin-bottom: 5px;"
+                                class="mdc-typography--headline6 mdi mdi-information-variant">学校域名系统</h6>
+                            <hr />
+                            <p>学校域名系统</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        </div>
+                    </div>
+                    <footer class="mdc-dialog__actions" style="background-color: #dddddd;">
+                        <button type="button" class="mdc-button mdc-dialog__button " data-mdc-dialog-action="accept"
+                            data-mdc-dialog-button-default>
+                            <span class="mdc-button__label">继续</span>
+                        </button>
+                    </footer>
+                </div>
+            </div>
+            <div class="mdc-dialog__scrim"></div>
+        </div>
+        <script type="text/javascript">
+
+            (function (material) {
+                var header = {
+                    init: function () {
+                        header.attachTopbar();
+                        material.autoInit();
+                    },
+                    attachDrawer: function () {
+                        var elm = document.getElementById('app-drawer');
+                        var drawer = material.drawer.MDCDrawer.attachTo(elm);
+                        var closeDrawer = function (evt) {
+                            drawer.open = false;
+                        };
+                        drawer.foundation_.handleScrimClick = closeDrawer;
+                        document.onkeydown = function (evt) {
+                            evt = evt || window.event;
+                            if (evt.keyCode == 27) {
+                                closeDrawer();
+                            }
+                        }
+                            ;
+
+                        header.drawer = drawer;
+
+                        return drawer;
+                    },
+                    attachTopbar: function (drawer) {
+                        var drawer = header.attachDrawer();
+                        var dialog = header.attachNotificationDialog();
+                        header.attachDrawerToggle(drawer);
+                        header.attachNotificationToggle(dialog);
+                    },
+                    checkCaps: function (ev) {
+                        var s = String.fromCharCode(ev.which);
+                        if (s.toUpperCase() === s && s.toLowerCase() !== s && !ev.shiftKey) {
+                            ev.target.parentElement.classList.add('caps-on');
+                        } else {
+                            ev.target.parentElement.classList.remove('caps-on');
+                        }
+                    },
+                    attachDrawerToggle: function (drawer) {
+                        var topAppBar = material.topAppBar.MDCTopAppBar.attachTo(document.getElementById('app-bar'));
+                        topAppBar.setScrollTarget(document.getElementById('main-content'));
+                        topAppBar.listen('MDCTopAppBar:nav', function () {
+                            drawer.open = !drawer.open;
+                        });
+                        return topAppBar;
+                    },
+                    attachNotificationDialog: function () {
+                        var element = document.getElementById('cas-notification-dialog');
+                        var dialog = material.dialog.MDCDialog.attachTo(element);
+                        return dialog;
+                    },
+                    attachNotificationToggle: function (dialog) {
+                        var btn = document.getElementById('cas-notifications-menu');
+                        btn.addEventListener('click', function () {
+                            if (countMessages > 0) {
+                                dialog.open();
+                            }
+
+                        });
+                    }
+                }
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    header.init();
+
+                    if (countMessages == 0) {
+                        window.jQuery('#notifications-count').remove();
+                    } else {
+                        window.jQuery('#notifications-count').text("(" + countMessages + ")")
+                    }
+                });
+            }
+            )(mdc);
+        </script>
+    </div>
+    <div class="mdc-drawer-scrim"></div>
+    <div class="mdc-drawer-app-content mdc-top-app-bar--fixed-adjust d-flex justify-content-center">
+        <main role="main" id="main-content" class="container-lg py-4">
+            <div id="content" class="d-flex justify-content-center">
+                <div style="background-color: rgba(255,255,255,0.9);width:100%;"
+                    class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
+                    <section id="loginForm" class="login-section login-form">
+                        <div class="d-flex flex-column justify-content-between m-auto">
+                            <div>
+                                <div id="serviceui" class="mb-4">
+                                    <div class="d-flex align-items-center p-2">
+                                        <img src="{{ url_for('static', filename='cas/images/sustech.png') }}" height="64" />
+                                        <div id="servicedesc" class="ml-3">
+                                            <h2 style="margin-bottom: 3px;">
+                                                <p style="margin-top: 0px;margin-bottom: 0px;">
+                                                    <span>
+                                                        <span>Wi-Fi验证</span>
+                                                    </span>
+                                                </p>
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-wrapper">
+                                <form method="post" id="fm1" action="login">
+                                    <section class="cas-field my-2=3"></section>
+                                    <section class="cas-field my-3">
+                                        <div class="mdc-text-field  d-flex">
+                                            <input class="mdc-text-field__input" id="username" size="25" type="text"
+                                                accesskey="n" value="" autocomplete="off" name="login" />
+                                            <label for="username" class="mdc-floating-label">用户名（SID）:</label>
+                                        </div>
+                                    </section>
+                                    <section class="cas-field my-3 mdc-input-group">
+                                        <div class="mdc-input-group-field mdc-input-group-field-append">
+                                            <div
+                                                class="mdc-text-field  mdc-text-field--with-trailing-icon d-flex caps-check">
+                                                <input class="mdc-text-field__input pwd" type="password" id="password"
+                                                    size="25" accesskey="p" autocomplete="off" name="password"
+                                                    value="" />
+                                                <label for="username" class="mdc-floating-label">密　码:</label>
+                                            </div>
+                                            <div class="mdc-text-field-helper-line caps-warn">
+                                                <p
+                                                    class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg text-danger">
+                                                    <span>大写键已打开！</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            class="reveal-password mdc-button mdc-button--raised mdc-input-group-append mdc-icon-button"
+                                            type="button">
+                                            <i class="mdi mdi-eye reveal-password-icon"></i>
+                                            <span class="sr-only">Toggle Password</span>
+                                        </button>
+                                    </section>
+                                    <section class="cas-field my-3"></section>
+                                    <section class="cas-field">
+                                        <div>
+                                            <!--        <span th:if="${recaptchaVersion=='v2'}" th:remove="tag">-->
+                                            <!--        </span>-->
+                                        </div>
+                                        <input type="hidden" name="execution"
+                                            value="24ee15ea-f4bc-4ca6-961a-6f79bedec73d_ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmM4VHNmUldhNGc0UWRta3RReWk5bGF0LUotdlViMEtWeDhUalFPOTBRQ0w3U2kzdWpWOE01anFiRFZsa2JyRkxRckduLVhIY0tzaHdVd3BRR1BSdEYxT0RONnpCTmtoZnBzQjV6TmJPYlN4ck12U0NxbXFmZm15V3NiMjRwSTB5ekI1UTJ1VFh5blpmTWZaYVFjbjJYNmxTZ1l1VlplNTg5aUFCR0ttRE40QXVDNGFPSFpWSTJtaWtYUm93ZWp0U1pydFcyS1Y5NW9lTkVVOFduM3RQaGd0N0l5RS1oekJnWDhNQmx4aEtyLTA4YTNBdDdXLTEwa1VOd3ptYkNUVVo0bDZXZFdDaVFEZF9OWVVpOVZmczhMSkFVU3hVOTFXZWRiai14R1Fna0VMdXNBRmZfeDd3a0ZtSnRiczA4RU50STJXbUpHb0doRVpTZk9tUERKVl9NUWpLaG80Vm53dHQ1bDNkeUdQT3Z1aWprM1E4R0N0RzNEd08yeHpRLUxZTHY4eWZOU2drN0tOc1JGLWFaSW1uc1B1YTNMRXlSUDZINk40clcySkdldlVQQTlzUERCTmRrWVpsOWowQUNnOTF4N0RUWXRUSWEtODZPS3JGSWZzYUgyc25xUVpob3M4c24ydWFRLVlCR3VCV1pPUWRsMUtwNEdFdnZCUEVodjVjaEVoajVzLXN5Q0pGYTBIT3l6UzVqMHpKZGNvbkVkbHRqNWR3NkthazliU3c2d1k4cFRMSDNRTUFlODAzTzJtV0dDeE5NRm5URjE1NGF5M2ctMzAtVWpvVkUxTU9yckhtNkxTbUdDYTZ1dTBpOUp1TG51emlMdFdWUDVneU9uN1g2R2F6TjE5MzdmdGE3SGpQXy0teFBMZ3hNOWgxOG5rZkd3ZGI5RGE4VTRfaml3UDJUSWdKcHdUa2ZJbUJJUUdiNFg0ak5Bdkp5TWRnRmZUeHNlTUw1SzFuSzk3TTEtTEJrM0V3b0dNQWVMSG1sZFI4MHlYV0o3Q2lmWm95LXJreWNsUmVXVlZPLVlfQ3dObFRqbmxEbXRobXJBbXViM2VfOFRrX2dPcTR4SDdDTnJZOVpoUlJsdVdqZUpzVkI3VFBhZzVpN0FGZzBlcWY1UEp5cWgzbFV2RnNwUWpTdk52VWFKdklSN21waTV4X09xUV9yS0xZZ1E2NEZ3dGdvcVJvc2ZPWmQ1X2J0MEhOdzNtN1BEUEEySmhJUjhpOWduOE5xaGhrWEM5VENnR3ZhRGtqUW40OU9CTGt6cGxwakpxVzZIRWIyaVFHbk9DbnZRaG1MQlFXMzlQSVRXX09WeFJTSy1lTUh6QnFkZnU2ZWdTVEd6YWluZTdUdFpwSXl5RVBNWXBlM2UydmdpMURrQlp4ZVAyV3BRQWlDVlptZDMxTVlQTmtxTzkyaVdoUFhObW5xLXNzSGlWRHAxdUdDREdZcmFEWVMzVjV1dnJwYkRiSzgyaWpKMF9oSGFqQkpTVUw2SU1VYmlFVkZnZzNNQUtrR3J1SzFpQl9abE4tclZkbTZvOEdlQkdIbmdPdUU3YkJxSThzTG1FcGJVeFNndDJBQ2RCNncyQ21HcTZORFdlM1NoNVpTUzUyNDVWUUdHLTJhX3BXLU9hZ0dUQVZPQk40Nk5RRzZhaU0waFJWUXRzZUdSSzAzXzd2MlRtOGRjTUlJQkNKbWcwamZfcnVlZFpwU1d5VlE5Ul82cWI1X0dhWS1Tb2x5MmFBR0Z0SDduNHI4b0RYRXVSX2FYWjJqSnpST2lEUkRldURTLTd6VlpjY1hJRWt5dlFOZW43UkhqWGtzekxKRjNVcm9iSTVSQ2ZBcFptU0VLdnRTLVFCRmJZbjJiaVExbk5fdTd4QXVqZTlEOUZPaXlFemt6d3dWX2p3NjUxcE9meS1XbzNNQ1VnNl9jUEQ4OUtKUHZwUlpoVDlMeU50d2lsa2NkOGVxUGZobDlzTTRaTUJhQUdoSE1tSUtHRmRFblJlRnhYd2FWNGdYeFpYSzV5bkNsaXkyT0ZFbVc5SDZIX2pibWl5bUhOSy1YR3E4OUJtZmxPVkxBX3hkRG9PakRpSnlBVXozd1F1d0djLU9qdUJDNU93RE12dnQxZWlPQjFxM3JGZHNHeXR3SEJsUHdxX1hqeHRhZzFzV1VoU2lOQUc5TGFGRUJLQ1lPNFVzZVFVamxod09FRC04NmY3T1Y5ZndLQlJtQkNPaGdBYkpXTmdlWS1GeDExM2hkQThwamoxUEtXZEhMWF9lWldmOUhST0N0WFlNZnlpY1BIVjZDQ1hMcG9tVXRXTHhMUlU3UGltRTR5TndSZTdNbTFOQ0RQU2hUTmNPNDU4OFN3R0lMd2tRYmZrOUlsTzRvNkw4ZjFpRU1uT19iQm5GanJ2UWJwaEZzYXR0Q2VKTEJtRTFXRnFacjl6M0hMOU9rZDZuSkppRXF5OVRpWXEyZ3RtcDVKbGx6c2ZPSTlYVlZpcnFGUGc5Vk1ZM3hpYi1xdmJtcUJJYmlMcWdqanpDdUJ4N0RRenAtbi0yOFQ2d1AydFNIQk1vX2FMSTh5ZWdmcmY1UzNNWXBLd0JoSGwtc3gtajBrQS1JQ2h1YzJUZHVJcHVPWkNiZjRmYlN5SUcwRHZqelFoNjh3TTh5anlJT29xSG9YVXZQX0laTDRUbHBfRkdEYlR1WGtnUWdheGNLcFBBaXBnOVJCM083VHNGRXVJYkpwSHU3SGZlcC1pZXN0LWlhSi1yenI5dElNM3NNV1BlWWFmUUc3bm15TFYtLXBZV1R1eUxkOWx3WTc0MXgzNGxwc2tta3F6akRYMWNfWF8tNXF0R292RjhPd0hQaXRJMElhNGhZY0NHa0Eya0llV1hkQXNnOTc2YmtMTVZleDZCa3V5VEV0MFpLMDhhQnh0cW1pXzFrNmN5dGF1WlRiT2NpZjUzdk1tNUNiai1FX2NnUGhXMlRJQVR3YVNhSjJEM3hFak9MREprekxKaDFndXdmNUo4Nmd0V2NBeExONmRHdmJDVzNlV1Q5Qkl2c3NaM2VTb2JEWXE4LXI3MmtMQWxGOTU2N0d3azBHLU1zYk44WHlwZ1ZPeXdqUTdnY2FpOEo5RW1kN2NzcVJMczBaRG5vY1VobmZhYUlFZVhiNUJpbFl0UWc1XzdlY2dRLVkxSTFoT05NZkxzdnBmLXBiTUNHV19sUWMwcE9wRFNKeTJhNi1BT21HOFFacDhkMXgxdzhNSjA1aDBmZ0ZUNkJlcFFmcVNFN3RreTdFS0pjU1RBckc4R0hTb1dnMGVQbll1dVZHaU45M1dxYmhPT2xoZWttaFN2eS02U1RBbTBnMnRkZWdSYV9YOGtzOEdNb0xQVjZpUEpUeW9lYnFib084RjRmTkxnaC1VbWk0Mld6T1dhTjMtaWYySzQwX2lLOURvVDJZX0xmWXJPRzlrOHpOZ0V1Q3BYZXFPTWNNMDFwNHdySnQ0N1NPa29qcGkzOHNPWUladk5hTk5CbXNwUnVrTGlmN21QYjFvQU10TjNPdUVZUTR6OVp1M3IyMlhjbXAwc0cyZkxvU0hNTkRKV0dqWnBaRnNXdXF6VnI2d3JDZnIwYnBHR0FUYklLV2JLLWh5ZHJ0ZmI0Ul9yb0dDa1JQTnIyUHdvUHgzb1dsSWpIX0pHUjA0a19UMGh3TjY1OFd6SHZ4X0VyQU91dWpvTUwzakg2TS1ackJrUHVUVVYxbzBjNEhKcWI2ZlVOU1N0d25QWnRseWwxVEM0b2p1WUc5R0N6Q0MtVzVwQ01sSU9QXzFFMzIzckhHdkM4MHFUeDBHamNwcXE1M2l3QkN2N3lXc2tUZTg2U0tsczRHUjdfa0t4ZWFCWTJ5QUI0d1JXUV9rY0ZiMFVMbl8xektwOERqTENFbFJyRnlvODQwTmRkLTZxUGVRS0RkajN6UWRiN1JkRTBPc0RsQ0JkQWFweFRtTkoxM2FqUFkyc0ZCeUR0Rkc0RUZ6UFhNZEt3Ujl5ZE1xWGlrcUhvQnhsRnJ4NUk3WkMxc01hVVdGOHV6Nm94U21KTDhvdzJ4ZDViVTNvWGVQWlllS1BSNHktdW9xaDhwUkJ0QzJuZkhHNWtLTFh2cTZXRTQ5d3FuTVBzU2U2QjhOM0V5LV9MdDJVdmlIVk5TWFh0RURTRWhZMU5tUElqLUo4cjZKWkh5clZXRjMySE1YN2lMcFRuYXBoaTZ1dlZhZEZ0U2JWT2ZqZlRtRk5Xd25RV0RQekloRERvVzFTRTFNcHBObExvYl9hOUc3NTR5d2RaRG5ZU1VNcDA2Mmx1ZkM0eF8tTlB1NmNyWHFjc2tMY25HQkEwRzVQa0tUcm5mZHNjbUp0NEJLQ1V0TVdCdG1aTXhIelRiNkozVHFQdTVDbDZIbU9YRXotQTNEaWtlVDVOa251ZUpTWVgzZ0daQzFfUldIMXdJVlZxd3NKWk04RTRFUGtZMGpocnl6QkpLcjZ6NnJ1SXdYTWdTX2V4MmtFV0VaYk9zZkNvNHh2X2RibnRLYlN0QThEWGNUQkJLUGVZVUJIYkdMVV92NHgzNTU5M2puLVVFV043cWZBTVA1U2pPeGtHR0pPQXBOc1B3ODRXYmFPVThhbmR5NTFSZlkyRjVNSTJ4MnJZb3UzLU9BTWZGaGFkVDNXRjlPM0cxU01aaDRpNm1EdU1wSEdRYnVacXhyWDVLLVZkNnBvS1BGckJiQkV5QUZzN09MbUZNYXlrY3hQWHBlRVBUWlY3SUZBbVAwRW1fYlZZOFY4WEJ5SEtOeWZZMXQwSWxSZTRSU0Z6OWlTanROTHJDYlRSb0haOE0xelhXZHppVEVSMVdFTWZyaXhZdkVyVmdZdEVaMEtSZ3JvcjFESkRKcEVmT1hlNGgxWTQxY3BOTmFlWDZ5aE9RVkVZbE5Oa05YR3ZtUXZQb3Blay1EMDVaZ0ttWnBmU250dEtjMkVQZWpDMFpoUkdVUURldzBMRXBtdkxVakZ4N21vS2VtNzQ0Q3l1cXJpSDc4LUp3YnBZVk5Kb0pUUlQxY0RNMUM3bUpvZnRWa29qTmhHS3JRV3BVVGRBVThCWHlIRXlZUVpMWHMxbURvRE5kcXdFMHkwdkMtNWNvLTI2Z1VZaUQ4Z2Z2YmFpeUpwY2taNE5BcEprWjU4bVF3dGRwZkF2NmVTMzI0LWt3QVgyMUFxZ0ZsRmpNX0hCUWF5Z042ZFNYaGJhR0dHQTJickQ3SElZZHdUWmZ0c0E0eUh5M09uRm4xNVdPYi1DQ2VSR1dFY29aZ1JHZ3ZzSktPTl91TEFmZE1vakFxNEQyTjhnQk9KR1lJajdhVGJLZHhNWFQwYU82WlhqNWdpU3FnUTQtM2RublNzMjBVcDFvemFTQ2lzSzRmV1VuS09GSUgyaWJvcnFPbkVWRmxOb3kxalJUNmF2M2x5dy5uVHh2cF9vUXR1WWk3aVg1U0ZGWFVBTEd0SUdRVHlOdjlIYjE4SXFLN3RqZnROYkgySGQ4XzJuSXVJWkhuakJ5UWI2eDJYc3BUcUluVkJ5ZUp5TnZDdw==" />
+                                        <input type="hidden" name="_eventId" value="submit" />
+                                        <input type="hidden" name="geolocation" />
+                                    </section>
+                                    <span>
+                                        <button class="mdc-button mdc-button--raised" name="submitBtn" type="submit"
+                                            accesskey="l">
+                                            <span class="mdc-button__label">登录</span>
+                                        </button>
+                                    </span>
+                                </form>
+                                <hr class="my-4" />
+                                <div id="pmlinks" class="my-2">
+                                    <form class="d-inline-block" method="post" id="passwordManagementForm">
+                                        <span class="fa fa-unlock"></span>
+                                        <a href="javascript:void(0)" onclick="alert('请联系管理员重置密码。');">忘记密码？</a>
+                                    </form>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                </div>
+                                <script type="text/javascript">
+                                    /*<![CDATA[*/
+                                    var i = "One moment please..."
+                                    var j = "\u767B\u5F55"
+                                    /*]]>*/
+                                    $(window).on('pageshow', function () {
+                                        $(':submit').prop('disabled', false);
+                                        $(':submit').attr('value', j);
+                                    });
+                                    $(document).ready(function () {
+                                        $("#fm1").submit(function () {
+                                            $(":submit").attr("disabled", true);
+                                            $(":submit").attr("value", i);
+                                            return true;
+                                        });
+                                    });
+                                </script>
+                            </div>
+                            <div id="sidebar">
+                                <div class="sidebar-content">
+                                    <p>
+                                        出于安全考虑，一旦您访问过那些需要您提供凭证信息的应用时，请操作完成之后<a
+                                            href="https://cas.sustech.edu.cn/cas/logout">登出</a>
+                                        并关闭浏览器。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="providers" class="login-section login-providers">
+                        <div>
+                            <!--                <h3 class="text-center mt-md-0 mt-4">-->
+                            <!--                    <i class="fas fa-user-shield"></i>-->
+                            <!--                    <span th:utext="#{screen.welcome.label.loginwith}">External Identity Providers</span>-->
+                            <!--                </h3>-->
+                            <div class="d-flex justify-content-center" style="display:block">
+                                <ul class="list-unstyled d-flex flex-column m-0 flex-fill">
+                                    <li class="p-1 login-provider-item">
+                                        <div id="myTabContent" class="tab-content">
+                                            <div id="weixin" style="height:405px;">
+                                                <div align="center">
+                                                    <h3 class="text-center">&nbsp;
+                                                        <!--<span th:utext="#{screen.wechat.login}">Wechat Login</span>-->
+                                                    </h3>
+                                                    <div class="impowerBox"
+                                                        style="width:280px;height:370px;display:block;">
+                                                        <div id="qrcode"
+                                                            style="background-color:white;width:280px;height:280px;">
+                                                            <div id="wx_after_warning" class="wrp_code_rl_mask"
+                                                                style="width:290px;height:290px;display:none">
+                                                                <i class="status_icon icon38_msg error"
+                                                                    style="margin-left:10px;margin-top:50px;"></i>
+                                                                <h3>二维码已过期</h3>
+                                                                <p>您可尝试刷新页面后再次扫码登录</p>
+                                                                <button
+                                                                    style="cursor: pointer;border-radius: 2px;border: 1px solid #AAA;min-width: 24px;height: 24px;padding: 0 12px;background: #F5F5F5;"
+                                                                    onclick="window.location.reload()">
+                                                                    <span>刷新</span>
+                                                                </button>
+                                                            </div>
+                                                            <div id="wx_after_cancel" class="wrp_code_rl_mask"
+                                                                style="width:290px;height:290px;display:none">
+                                                                <i class="status_icon icon38_msg warn"
+                                                                    style="margin-left:10px;margin-top:50px;"></i>
+                                                                <h3>您已取消此次登录</h3>
+                                                                <p>您可以刷新页面后再次扫码登录</p>
+                                                                <button
+                                                                    style="cursor: pointer;border-radius: 2px;border: 1px solid #AAA;min-width: 24px;height: 24px;padding: 0 12px;background: #F5F5F5;"
+                                                                    onclick="window.location.reload()">
+                                                                    <span>刷新</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="info">
+                                                            <div class="status status_browser js_status"
+                                                                id="wx_default_tip">
+                                                                <p>请使用微信扫描二维码登录</p>
+                                                            </div>
+                                                            <div class="status status_succ js_status"
+                                                                style="display:none" id="wx_after_scan">
+                                                                <i class="status_icon icon38_msg succ"></i>
+                                                                <div class="status_txt">
+                                                                    <h4>扫描成功</h4>
+                                                                    <p>请在企业微信中点击确认即可登录</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <script src="{{ url_for('static', filename='cas/js/easy.qrcode.js') }}"></script>
+                                            <script>
+                                                var options = {
+                                                    text: "https://www.bilibili.com/video/BV1GJ411x7h7",
+                                                    width: 280,
+                                                    height: 280,
+                                                    colorDark: "#000000",
+                                                    colorLight: "#ffffff",
+                                                    correctLevel: QRCode.CorrectLevel.L,
+                                                    // L, M, Q, H
+                                                    dotScale: 0.7,
+                                                    timing: '#000000',
+                                                    logo: "{{ url_for('static', filename='cas/images/wecom.png') }}",
+                                                    logoWidth: 50,
+                                                    logoHeight: 50
+                                                }
+                                                new QRCode(document.getElementById("qrcode"), options);
+                                                changeStatus("default");
+                                                function changeStatus(status) {
+                                                    if (status === 'cancel') {
+                                                        $("#wx_default_tip").hide();
+                                                        $("#wx_after_scan").hide();
+                                                        $("#wx_after_cancel").show();
+                                                        $("#wx_after_warning").hide();
+                                                    } else if (status === 'scan') {
+                                                        $("#wx_default_tip").hide();
+                                                        $("#wx_after_scan").show();
+                                                        $("#wx_after_cancel").hide();
+                                                        $("#wx_after_warning").hide();
+                                                    } else if (status === 'default') {
+                                                        $("#wx_default_tip").show();
+                                                        $("#wx_after_scan").hide();
+                                                        $("#wx_after_cancel").hide();
+                                                        $("#wx_after_warning").hide();
+                                                    } else {
+                                                        $("#wx_default_tip").show();
+                                                        $("#wx_after_scan").hide();
+                                                        $("#wx_after_cancel").hide();
+                                                        $("#wx_after_warning").show();
+                                                    }
+                                                }
+                                            </script>
+                                        </div>
+                                        <!--<iframe th:if="${entry.name == 'Wecom'}" th:src="@{${entry.redirectUrl}}" width="100%" height="400px" frameborder="0"></iframe>-->
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <script>
+                            var redirectTo = $("a[autoRedirect=true]").attr("href");
+                            if (redirectTo != null && redirectTo != undefined) {
+                                window.location.href = redirectTo;
+                            }
+                        </script>
+                    </section>
+                    <!--            <section id="acceptto" class="login-section login-qr d-xs-none d-md-block" th:if="${accepttoApplicationId}">-->
+                    <!--                <div th:replace="fragments/accepttoQRCode :: accepttoQRCode">-->
+                    <!--                    <a href="fragments/accepttoQRCode.html">accepttoQRCode</a>-->
+                    <!--                </div>-->
+                    <!--            </section>-->
+                </div>
+            </div>
+        </main>
+    </div>
+    <footer class="py-4 d-flex justify-content-center cas-footer">
+        <div id="copyright" class="mr-2 d-inline-block">版权所有 &copy;2020 南方科技大学 （支持电话:88010777）</div>
+    </footer>
+</body>
+
+</html>

